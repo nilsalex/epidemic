@@ -3,12 +3,16 @@ module Lib where
 import Control.Monad.Random
 import Control.Monad.Random.Class
 
+{-
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Simulate
+-}
 
 import Data.List (iterate')
 
 import Debug.Trace (trace)
+
+import Reanimate
 
 data Individual = Individual
            { xPos :: {-# UNPACK #-} !Double
@@ -122,6 +126,12 @@ simulate' ar r recov step (Model h p) = do
   let h' = h ++ [(length sus,length inf,length rec)]
   return $ Model h' (move step p'')
 
+someFunc :: IO ()
+someFunc = reanimate $ playThenReverseA $ mkAnimation duration $ \t ->
+  partialSvg t $ pathify $ mkCircle radius
+  where duration = 2; radius = screenHeight/3
+
+{-
 drawInd :: Individual -> Picture
 drawInd (Individual x y _ _) = translate x' y' $ circleSolid 3
   where
@@ -138,9 +148,9 @@ drawPop (Population sus inf rem) = translate (-100) (-100) $ pictures [sus', inf
 drawHist :: [(Int,Int,Int)] -> Picture
 drawHist xs@((s0,i0,r0):_) =
     pictures
-    [ color red $ polygon pathI
-    , color blue $ polygon pathS
-    , color (greyN 0.7) $ polygon pathR
+    [ color red $ pictures $ fmap (\(a,b,c) -> polygon [a,b,c]) tsI
+    , color blue $ pictures $ fmap (\(a,b,c) -> polygon [a,b,c]) tsS
+    , color (greyN 0.7) $ pictures $ fmap (\(a,b,c) -> polygon [a,b,c]) tsR
     ]
   where
     (sl,il,rl) = last xs
@@ -154,21 +164,28 @@ drawHist xs@((s0,i0,r0):_) =
                   in fmap (\ix -> let ix' = (round ((fromIntegral ix :: Double)*fac) :: Int)
                                       (s,i,r) = xs !! ix'
                                   in (fromIntegral ix, scale s, scale i, scale r)) [0..199]
-    pathI' = fmap (\(x,s,i,r) -> (x-100, i-200)) coords
-    pathS' = fmap (\(x,s,i,r) -> (x-100, i+s+1-200)) coords
-    pathR' = fmap (\(x,s,i,r) -> (x-100, i+s+r+2-200)) coords
-    pathI = (-100,-200) : fmap (\(x,s,i,r) -> (x-100, i-200)) coords ++ [((fromIntegral (l'-101)),-200)]
-    pathS = (-100, scale i0-200) : pathS' ++ [((fromIntegral (l'-101)), scale il-200)] ++ reverse pathI'
-    pathR = (-100, scale (i0+s0)+1-200) : pathR' ++ [((fromIntegral (l'-101)), scale (il+sl)+1-200)] ++ reverse pathS'
+    bottom = fmap (\(x,_,_,_) -> (x-100, -200)) coords
+    top    = fmap (\(x,_,_,_) -> (x-100, -130)) coords
+    pathI = fmap (\(x,s,i,r) -> (x-100, i-200)) coords
+    pathS = fmap (\(x,s,i,r) -> (x-100, i+s-200)) coords
+
+    tsI = triangulate bottom pathI
+    tsS = triangulate pathI pathS
+    tsR = triangulate pathS top
 
     scale x = 70 * fromIntegral x / n'
 
+triangulate :: [a] -> [a] -> [(a,a,a)]
+triangulate upper lower = go upper lower
+  where
+    go (u1:u2:us) (l1:l2:ls) = (u1,l1,l2) : (u2,u1,l1) : go (u2:us) (l2:ls)
+    go _ _ = []
 
 drawModel :: Model -> Picture
-drawModel (Model h p) = trace (show h) $ pictures [drawPop p,drawHist h]
+drawModel (Model h p) = pictures [drawPop p,drawHist h]
 
-someFunc :: IO ()
-someFunc = do
+someFunc' :: IO ()
+someFunc' = do
   let attack = 0.2
   let radius = 0.05
   let recov  = 20
@@ -176,3 +193,4 @@ someFunc = do
   let i0 = 2
   model <- evalRandIO (randModel s0 i0)
   simulateIO (InWindow "epidemic" (640, 480) (0,0)) white 20 model (pure . drawModel) (\_ t m -> simulate' attack radius recov (realToFrac t) m)
+-}

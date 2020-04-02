@@ -3,7 +3,21 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: reanimate-0.2.0.2@sha256:c684f45049b5252538e42f2cab07805b452196e1d1612a8d720b567ee3e06b41,4151
+    pantry-tree:
+      size: 23792
+      sha256: e1b26e5e40040cb58db2373012fe809f41cda57767a17a48d3c61c0093430ed7
+  original:
+    hackage: reanimate-0.2.0.2@sha256:c684f45049b5252538e42f2cab07805b452196e1d1612a8d720b567ee3e06b41,4151
+- completed:
+    hackage: chiphunk-0.1.2.1@sha256:1e17e0e3d2fc91317e2cfcb8fd9f7add4a5038d76a4ae6b444641c0a2adec881,4619
+    pantry-tree:
+      size: 6333
+      sha256: 505d40929bd792b8003c0d03ec93d99ecba5e7927fbc6193824c0dab92c54dec
+  original:
+    hackage: chiphunk-0.1.2.1@sha256:1e17e0e3d2fc91317e2cfcb8fd9f7add4a5038d76a4ae6b444641c0a2adec881,4619
 snapshots:
 - completed:
     size: 491372

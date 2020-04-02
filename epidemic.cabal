@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7c79f4205adedd9383415df94dbd3dd01a2ac145c06edfcec2992f417db8e62e
+-- hash: a8ee7e10287c63dd36c71e0ec2b804d8ca67551bb216943c4db445630aa4aa59
 
 name:           epidemic
 version:        0.1.0.0
@@ -36,6 +36,7 @@ library
       MonadRandom
     , base >=4.7 && <5
     , gloss
+    , reanimate
   default-language: Haskell2010
 
 executable epidemic-exe
@@ -50,6 +51,7 @@ executable epidemic-exe
     , base >=4.7 && <5
     , epidemic
     , gloss
+    , reanimate
   default-language: Haskell2010
 
 test-suite epidemic-test
@@ -65,4 +67,5 @@ test-suite epidemic-test
     , base >=4.7 && <5
     , epidemic
     , gloss
+    , reanimate
   default-language: Haskell2010
